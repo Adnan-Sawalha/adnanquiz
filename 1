@@ -1,6 +1,28 @@
 import numpy as np
-f = lambda x: 
-grad_f = lambda x: np.array([ , ])
-z = np.array([ , ])
-f_hat = lambda x: f(z) + grad_f(z) @ (x- z)
-f_hat([ , ])
+rms = lambda x: (sum(x**2)**0.5 / len(x)**0.5)
+dis = lambda x,y: np.linalg.norm(x-y)
+near = lambda x,z: z [np.argmin([np.linalg.norm(x-y) for y in z])]
+std = lambda x: np.linalg.norm(x - sum(x) / len(x)) / (len(x)**0.5 )
+de_mean = lambda x: x - sum(x) / len(x)
+ang = lambda x,y: (np.arccos(x @ y / (np.linalg.norm(x)*np.linalg.norm(y)))) * (360 / (2*np.pi))
+def corr_coef(a,b):
+    a_tilde = a - sum(a) / len(a) 
+    b_tilde = b - sum(b) / len(b) 
+    denom = (np.linalg.norm(a_tilde) * np.linalg.norm(b_tilde))
+    return (a_tilde @ b_tilde) / denom
+clus = lambda x, y: y[np.argmin(np.linalg.norm(y - x, axis=1))]
+def gram(a):
+    q = []
+    for i in range(len(a)):
+        q_tilde = a[i]
+        for j in range(len(q)):
+            q_tilde = q_tilde - (q[j] @ a[i])*q[j]
+        if np.sqrt(sum(q_tilde**2)) <= 1e-10:
+            print('Vectors are linearly dependent.')
+            print('GS algorithm terminates at iteration ', i+1)
+            return q
+        else:
+            q_tilde = q_tilde / np.sqrt(sum(q_tilde**2))
+            q.append(q_tilde)
+    print('Vectors are linearly independent.')
+    return q
